@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.identity.application.authenticator.live.internal;
 
 import org.apache.commons.logging.Log;
@@ -23,34 +22,38 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authenticator.live.WindowsLiveOAuth2Authenticator;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="identity.application.authenticator.live.component"
- * immediate="true"
- */
+@Component(
+         name = "identity.application.authenticator.live.component", 
+         immediate = true)
 public class SocialAuthenticatorServiceComponent {
 
     private static final Log log = LogFactory.getLog(SocialAuthenticatorServiceComponent.class);
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         try {
-
             WindowsLiveOAuth2Authenticator windowsLiveOAuth2Authenticator = new WindowsLiveOAuth2Authenticator();
-            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(),
-                    windowsLiveOAuth2Authenticator, null);
-
+            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(), windowsLiveOAuth2Authenticator, null);
             if (log.isDebugEnabled()) {
                 log.debug("Windows Live Social Authenticator bundle is activated.");
             }
-
         } catch (Throwable e) {
             log.fatal("Error while activating Windows Live Social authenticator bundle.", e);
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Windows Live Social Authenticator bundle is deactivated.");
         }
     }
 }
+
